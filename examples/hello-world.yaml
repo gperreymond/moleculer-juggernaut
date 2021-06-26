@@ -2,16 +2,15 @@
 sources:
   http_logs_01:
     type: http
-    address: 0.0.0.0:9876
+    host: 0.0.0.0
+    port: 9876
     auth:
       username: admin01
       password: changeme
   http_logs_02:
     type: http
-    address: 0.0.0.0:6789
-    auth:
-      username: admin02
-      password: changeme
+    host: 0.0.0.0
+    port: 6789
 
 sinks:
   console_id:
