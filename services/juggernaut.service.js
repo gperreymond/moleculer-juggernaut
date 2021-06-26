@@ -1,5 +1,3 @@
 module.exports = {
-  name: 'Juggernaut',
-  actions: {
-  }
+  name: 'Juggernaut'
 }

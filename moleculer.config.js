@@ -16,7 +16,7 @@ module.exports = {
       process.exit(1)
     }
     broker.logger.info('configFilePath need to be loaded')
-    const { sources } = YAML.load(configFilePath)
+    const { sources, sinks } = YAML.load(configFilePath)
     // Create sources for configFilePath
     const sourcesKeys = Object.keys(sources)
     sourcesKeys.map(key => {
@@ -27,6 +27,25 @@ module.exports = {
           id: key,
           ...sources[key]
         }
+      })
+      return true
+    })
+    // Create sinks for configFilePath
+    const sinksKeys = Object.keys(sinks)
+    sinksKeys.map(key => {
+      const events = {}
+      sinks[key].sources.map(name => {
+        events[`${name}.broadcast`] = function (ctx) { ctx.broker.call(`${key}.execute`, ctx.params) }
+        return true
+      })
+      broker.createService({
+        name: key,
+        mixins: [require(`./modules/sinks/${sinks[key].type}.mixin`)],
+        settings: {
+          id: key,
+          ...sinks[key]
+        },
+        events
       })
       return true
     })

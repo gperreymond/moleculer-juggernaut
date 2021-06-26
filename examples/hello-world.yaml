@@ -1,20 +1,15 @@
 # http: logs & receiver
 sources:
-  http_logs_01:
+  http_source:
     type: http
     host: 0.0.0.0
     port: 9876
     auth:
       username: admin01
       password: changeme
-  http_logs_02:
-    type: http
-    host: 0.0.0.0
-    port: 6789
 
 sinks:
-  console_id:
+  console_sink:
     type: console
     sources:
-      - http_logs_01
-      - http_logs_02
+      - http_source
