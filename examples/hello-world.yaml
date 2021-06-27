@@ -1,5 +1,9 @@
 # http: logs & receiver
 sources:
+  file_source:
+    type: file
+    include:
+      - "/home/gperreymond/Workspace/github/gperreymond/vector-etl/log/**/*.csv"
   http_source:
     type: http
     host: 0.0.0.0
@@ -12,4 +16,5 @@ sinks:
   console_sink:
     type: console
     sources:
+      - file_source
       - http_source

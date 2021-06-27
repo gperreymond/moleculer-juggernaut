@@ -13,7 +13,7 @@ module.exports = {
       const broker = this.broker
       const settings = this.settings
       const logger = this.logger
-      logger.info('source_http loading...')
+      logger.info('source_http loading...', settings)
       this.$server = Hapi.server({
         port: settings.port,
         host: settings.host
@@ -22,7 +22,7 @@ module.exports = {
         method: 'POST',
         path: '/',
         handler: (request) => {
-          broker.broadcastLocal(`${settings.id}.broadcast`, request.payload)
+          broker.broadcastLocal(`${settings.id}.broadcast`, { message: request.payload })
           return { success: true }
         }
       })

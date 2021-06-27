@@ -1,4 +1,20 @@
 const winston = require('winston')
+const Transport = require('winston-transport')
+
+class ContsoleTransport extends Transport {
+  log (info, callback) {
+    setImmediate(() => {
+      this.emit('logged', info)
+    })
+    callback()
+  }
+}
+
+const transport = new ContsoleTransport()
+transport.on('logged', (info) => {
+  delete info.level
+  console.log(JSON.stringify(info))
+})
 
 module.exports = {
   name: 'sink_console',
@@ -24,14 +40,12 @@ module.exports = {
   },
   async created () {
     try {
+      const settings = this.settings
       const logger = this.logger
-      logger.info('sink_console loading...')
+      logger.info('sink_console loading...', settings)
       this.$sink = winston.createLogger({
-        level: 'info',
         format: winston.format.json(),
-        transports: [
-          new winston.transports.Console()
-        ]
+        transports: [transport]
       })
       return true
     } catch (e) {
