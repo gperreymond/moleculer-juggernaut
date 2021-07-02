@@ -4,9 +4,8 @@ module.exports = {
   name: 'source_http',
   settings: {
     id: 'my_id',
-    hostname: 'localhost',
-    port: 8080,
-    auth: false
+    host: 'localhost',
+    port: 8080
   },
   async created () {
     try {

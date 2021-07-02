@@ -7,9 +7,6 @@ sources:
     type: http
     host: 0.0.0.0
     port: 9876
-    auth:
-      username: admin01
-      password: changeme
 
 transforms:
   remap_file_transform:
@@ -26,8 +23,15 @@ transforms:
     "
 
 sinks:
+  rabbitmq_sink:
+    type: rabbitmq
+    inputs:
+      - remap_file_transform
+    hostname: localhost
+    port: 5672
+
   console_sink:
     type: console
     inputs:
-      - http_source
       - remap_file_transform
+      - http_source
