@@ -1,4 +1,3 @@
-# http: logs & receiver
 sources:
   file_source:
     type: file
@@ -12,9 +11,23 @@ sources:
       username: admin01
       password: changeme
 
+transforms:
+  remap_file_transform:
+    type: script
+    inputs:
+      - file_source
+    source: "
+    const [timestamp, tagPath, value] = data.message.split(',')
+    data.timestamp = timestamp
+    data.tagPath = tagPath
+    data.value = value
+    delete data.message
+    delete data.file
+    "
+
 sinks:
   console_sink:
     type: console
-    sources:
-      - file_source
+    inputs:
       - http_source
+      - remap_file_transform

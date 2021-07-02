@@ -22,7 +22,10 @@ module.exports = {
         method: 'POST',
         path: '/',
         handler: (request) => {
-          broker.broadcastLocal(`${settings.id}.broadcast`, { message: request.payload })
+          broker.broadcastLocal(`${settings.id}.broadcast`, {
+            timestamp: new Date(),
+            message: request.payload
+          })
           return { success: true }
         }
       })

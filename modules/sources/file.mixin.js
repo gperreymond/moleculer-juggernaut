@@ -8,10 +8,13 @@ async function readStreamAsync (broker, file, settings) {
     stream.on('data', data => {
       const lines = data.split(/\n/)
       lines.map(line => {
-        broker.broadcastLocal(`${settings.id}.broadcast`, {
-          file,
-          message: line
-        })
+        if (line !== '') {
+          broker.broadcastLocal(`${settings.id}.broadcast`, {
+            timestamp: new Date(),
+            file,
+            message: line
+          })
+        }
         return true
       })
     })

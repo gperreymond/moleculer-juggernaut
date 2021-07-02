@@ -7,7 +7,7 @@ const { config: { file: configFilePath } } = require('./application.config')
 
 module.exports = {
   nodeID: `node-${name}-${version}-${uuidv4()}`,
-  logger: true,
+  logger: false,
   started: async (broker) => {
     // Load configFilePath
     const configFilePathExists = await fse.pathExists(configFilePath)
@@ -16,7 +16,7 @@ module.exports = {
       process.exit(1)
     }
     broker.logger.info('configFilePath need to be loaded')
-    const { sources, sinks } = YAML.load(configFilePath)
+    const { sources, transforms, sinks } = YAML.load(configFilePath)
     // Create sources for configFilePath
     const sourcesKeys = Object.keys(sources)
     sourcesKeys.map(key => {
@@ -30,11 +30,30 @@ module.exports = {
       })
       return true
     })
+    // Create transforms for configFilePath
+    const transformsKeys = Object.keys(transforms)
+    transformsKeys.map(key => {
+      const events = {}
+      transforms[key].inputs.map(name => {
+        events[`${name}.broadcast`] = function (ctx) { ctx.broker.call(`${key}.execute`, ctx.params) }
+        return true
+      })
+      broker.createService({
+        name: key,
+        mixins: [require(`./modules/transforms/${transforms[key].type}.mixin`)],
+        settings: {
+          id: key,
+          ...transforms[key]
+        },
+        events
+      })
+      return true
+    })
     // Create sinks for configFilePath
     const sinksKeys = Object.keys(sinks)
     sinksKeys.map(key => {
       const events = {}
-      sinks[key].sources.map(name => {
+      sinks[key].inputs.map(name => {
         events[`${name}.broadcast`] = function (ctx) { ctx.broker.call(`${key}.execute`, ctx.params) }
         return true
       })
