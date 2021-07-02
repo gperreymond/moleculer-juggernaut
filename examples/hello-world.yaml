@@ -1,18 +1,19 @@
 sources:
   file_source:
-    type: file
+    type: "file"
     include:
       - "/home/gperreymond/Workspace/github/gperreymond/vector-etl/log/**/*.csv"
-  http_source:
-    type: http
-    host: 0.0.0.0
-    port: 9876
+  rabbitmq_source:
+    type: "rabbitmq"
+    hostname: "localhost"
+    port: 5672
+    queue: "juggernaut.rabbitmq_sink.queue"
 
 transforms:
   remap_file_transform:
-    type: script
+    type: "script"
     inputs:
-      - file_source
+      - "file_source"
     source: "
     const [timestamp, tagPath, value] = data.message.split(',');
     data.timestamp = new Date(parseInt(timestamp));
@@ -21,17 +22,22 @@ transforms:
     delete data.message;
     delete data.file;
     "
+  remap_rabbitmq_transform:
+    type: "script"
+    inputs:
+      - "rabbitmq_source"
+    source: "
+    data = data.message
+    "
 
 sinks:
   rabbitmq_sink:
-    type: rabbitmq
+    type: "rabbitmq"
     inputs:
-      - remap_file_transform
-    hostname: localhost
+      - "remap_file_transform"
+    hostname: "localhost"
     port: 5672
-
   console_sink:
-    type: console
+    type: "console"
     inputs:
-      - remap_file_transform
-      - http_source
+      - "remap_rabbitmq_transform"
