@@ -1,16 +1,14 @@
 /* eslint no-eval: "off" */
 
-const { filter } = require('lodash')
-
 module.exports = {
-  name: 'transform_remap',
+  name: 'transform_script',
   settings: {
     id: 'my_id'
   },
   methods: {
-    remap (line, data) {
+    script (source, data) {
       try {
-        eval(line)
+        eval(source)
         return data
       } catch (e) {
         return data
@@ -24,14 +22,8 @@ module.exports = {
           this.logger.info(ctx.action.name, ctx.params)
           const broker = ctx.broker
           const settings = this.settings
-          // Run the remapping
-          const lines = filter(settings.source.split('\n'), o => o !== '')
-          if (lines.length > 0) {
-            do {
-              const line = lines.shift()
-              ctx.params = this.remap(line, ctx.params)
-            } while (lines.length > 0)
-          }
+          // Run the script
+          ctx.params = this.script(settings.source, ctx.params)
           // Brodcasting
           broker.broadcastLocal(`${settings.id}.broadcast`, ctx.params)
           return { success: true }
@@ -46,7 +38,7 @@ module.exports = {
     try {
       const settings = this.settings
       const logger = this.logger
-      logger.info('transform_remap loading...', settings)
+      logger.info('transform_script loading...', settings)
       return true
     } catch (e) {
       this.logger.error(e.message)

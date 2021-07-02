@@ -17,12 +17,12 @@ transforms:
     inputs:
       - file_source
     source: "
-    const [timestamp, tagPath, value] = data.message.split(',')
-    data.timestamp = timestamp
-    data.tagPath = tagPath
-    data.value = value
-    delete data.message
-    delete data.file
+    const [timestamp, tagPath, value] = data.message.split(',');
+    data.timestamp = new Date(parseInt(timestamp));
+    data.tagPath = tagPath;
+    data.value = parseFloat(value);
+    delete data.message;
+    delete data.file;
     "
 
 sinks:
