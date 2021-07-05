@@ -11,6 +11,7 @@ module.exports = {
         eval(source)
         return data
       } catch (e) {
+        console.log('SCRIPT ERROR', e.message)
         return data
       }
     }
@@ -49,7 +50,6 @@ module.exports = {
     return true
   },
   async stopped () {
-    await this.$server.stop()
     return true
   }
 }

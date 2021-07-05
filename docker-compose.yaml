@@ -2,16 +2,68 @@ version: "3.7"
 
 services:
 
-  rethinkdb:
-    image: "rethinkdb:2.4.1"
+  # rethinkdb:
+  #   image: "rethinkdb:2.4.1"
+  #   restart: "always"
+  #   volumes:
+  #     - "rethinkdb_data:/data"
+  #   networks:
+  #     - "public"
+  #   ports:
+  #     - "8080:8080/tcp"
+  #     - "28015:28015/tcp"
+
+  influxdb:
+    image: "influxdb:1.8.6"
     restart: "always"
+    environment:
+      DOCKER_INFLUXDB_INIT_USERNAME: admin
+      DOCKER_INFLUXDB_INIT_PASSWORD: changeme
     volumes:
-      - "rethinkdb_data:/data"
+      - "influxdb_data:/var/lib/influxdb"
     networks:
       - "public"
     ports:
-      - "8080:8080/tcp"
-      - "28015:28015/tcp"
+      - "8086:8086/tcp"
+
+  chronograf:
+    image: "chronograf:1.8.8"
+    restart: "always"
+    volumes:
+      - "chronograf_data:/var/lib/chronograf"
+    networks:
+      - "public"
+    ports:
+      - "8888:8888/tcp"
+
+  grafana:
+    image: "grafana/grafana:8.0.4"
+    restart: "always"
+    environment:
+      GF_SECURITY_ADMIN_USER: "admin"
+      GF_SECURITY_ADMIN_PASSWORD: "changeme"
+    volumes:
+      - "grafana_data:/var/lib/grafana"
+    networks:
+      - "public"
+    ports:
+      - "3000:3000/tcp"
+
+  # elasticsearch:
+  #   image: "elasticsearch:7.13.2"
+  #   restart: "always"
+  #   environment:
+  #     - "bootstrap.memory_lock=true"
+  #     - "discovery.type=single-node"
+  #     - "cluster.routing.allocation.disk.threshold_enabled=false"
+  #   ulimits:
+  #     memlock:
+  #       soft: -1
+  #       hard: -1
+  #   networks:
+  #     - "public"
+  #   ports:
+  #     - "9200:9200/tcp"
 
   rabbitmq:
     image: "rabbitmq:3.8.18-management-alpine"
@@ -26,10 +78,13 @@ services:
       - "5672:5672/tcp"
       - "15672:15672/tcp"
 
-
 volumes:
 
-  rethinkdb_data:
+  # rethinkdb_data:
+  # elasticsearch_data:
+  influxdb_data:
+  chronograf_data:
+  grafana_data:
 
 networks:
 

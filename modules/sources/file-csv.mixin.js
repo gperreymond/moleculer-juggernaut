@@ -1,41 +1,33 @@
 const fse = require('fs-extra')
 const watch = require('glob-watcher')
-
-async function readStreamAsync (broker, file, settings) {
-  console.log(file, settings)
-  return new Promise(resolve => {
-    const stream = fse.createReadStream(file, { encoding: 'utf8' })
-    stream.on('data', data => {
-      const lines = data.split(/\n/)
-      lines.map(line => {
-        if (line !== '') {
-          broker.broadcastLocal(`${settings.id}.broadcast`, {
-            timestamp: new Date(),
-            file,
-            message: line
-          })
-        }
-        return true
-      })
-    })
-    stream.on('close', () => {
-      resolve()
-    })
-  })
-}
+const parse = require('csv-parse/lib/sync')
 
 module.exports = {
   name: 'source_file',
   settings: {
-    id: 'my_id'
+    id: 'my_id',
+    delimiter: ','
   },
   actions: {
     readFile: {
       handler: async function (ctx) {
         try {
           this.logger.info(ctx.action.name, ctx.params)
+          const settings = this.settings
+          const broker = this.broker
           const { file } = ctx.params
-          await readStreamAsync(ctx.broker, file, this.settings)
+          const content = await fse.readFile(file)
+          const records = parse(content, {
+            delimiter: settings.delimiter
+          })
+          records.map(record => {
+            broker.broadcastLocal(`${settings.id}.broadcast`, {
+              timestamp: new Date(),
+              file,
+              message: record.join(settings.delimiter)
+            })
+            return true
+          })
           return { success: true }
         } catch (e) {
           this.logger.error(ctx.action.name, e.message)

@@ -1,6 +1,6 @@
 sources:
   file_source:
-    type: "file"
+    type: "file-csv"
     include:
       - "/home/gperreymond/Workspace/github/gperreymond/vector-etl/log/**/*.csv"
   rabbitmq_source:
@@ -8,6 +8,7 @@ sources:
     hostname: "localhost"
     port: 5672
     queue: "juggernaut.rabbitmq_sink.queue"
+    prefetch: 100
 
 transforms:
   remap_file_transform:
@@ -17,8 +18,10 @@ transforms:
     source: "
     const [timestamp, tagPath, value] = data.message.split(',');
     data.timestamp = new Date(parseInt(timestamp));
-    data.tagPath = tagPath;
-    data.value = parseFloat(value);
+    data.measurement = tagPath;
+    data.tags = {};
+    data.fields = {};
+    data.fields.value = parseFloat(value);
     delete data.message;
     delete data.file;
     "
@@ -37,7 +40,10 @@ sinks:
       - "remap_file_transform"
     hostname: "localhost"
     port: 5672
-  console_sink:
-    type: "console"
+  influxdb_sink:
+    type: "influxdb"
+    port: 8086
+    protocol: "http"
+    database: "metronlab"
     inputs:
       - "remap_rabbitmq_transform"
