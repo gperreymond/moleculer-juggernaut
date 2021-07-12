@@ -24,7 +24,7 @@
     "pg-hstore": "2.3.4",
     "rascal": "13.0.6",
     "rethinkdb": "2.4.2",
-    "sequelize": "6.6.4",
+    "sequelize": "6.6.5",
     "uuid": "8.3.2",
     "yamljs": "0.3.0"
   },
