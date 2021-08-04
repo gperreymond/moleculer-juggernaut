@@ -3986,10 +3986,10 @@ moleculer-repl@0.6.6:
     table "^6.7.1"
     tiny-human-time "^1.2.0"
 
-moleculer@0.14.14:
-  version "0.14.14"
-  resolved "https://registry.yarnpkg.com/moleculer/-/moleculer-0.14.14.tgz#05b76e62aa40a7a914367c98d44ca79a8d5ca297"
-  integrity sha512-YHhasMMQ3IYFrt0HmylNY1eJSdvvCOY2prju4/GCrjsFQXKuFHK5F+fzlE9iiru0SDCkMCmwDOhWUFjnWlDG8g==
+moleculer@0.14.15:
+  version "0.14.15"
+  resolved "https://registry.yarnpkg.com/moleculer/-/moleculer-0.14.15.tgz#53da8e5ce758aa58b0632cbcd42178021183bd38"
+  integrity sha512-mJOV30VnV/HQhEhRuprPn74GSHapgc9qyM2fEOBLtXtxAGx5uS0KPkfJXICT8Vw7yMjBd56gVNpG2ZU022piEQ==
   dependencies:
     args "^5.0.1"
     es6-error "^4.1.1"
@@ -4643,10 +4643,10 @@ querystringify@^2.1.1:
   resolved "https://registry.yarnpkg.com/querystringify/-/querystringify-2.2.0.tgz#3345941b4153cb9d082d8eee4cda2016a9aef7f6"
   integrity sha512-FIqgj2EUvTa7R50u0rGsyTftzjYmv/a3hO345bZNrqabNqjtgiDMgmo4mkUjd+nzU5oF3dClKqFIPUKybUyqoQ==
 
-rascal@13.0.6:
-  version "13.0.6"
-  resolved "https://registry.yarnpkg.com/rascal/-/rascal-13.0.6.tgz#1de57974dd2ef4fbd1680097a3a8da05d6e90df2"
-  integrity sha512-25vZy6D6DhVWHKdVBNZPI3dc0ghE0FVIyWzB0KCywFCn5b+msvRGD7c4VKB00cxaGMRowg+TjojhiYCS38GQSA==
+rascal@13.1.0:
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/rascal/-/rascal-13.1.0.tgz#29b8ae0caebbec03de0c5c0ba68e49077a2fec57"
+  integrity sha512-D1rpRCrwsG50lcnJyNkHQI7cXION0VowOf+ZZtvTYPizBsLuEqeLkqyCW0gdH/9RTXdWPn3KG31/FuCgaUH3mw==
   dependencies:
     async "^3.2.0"
     debug "^4.1.1"
